@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 748" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5b6b7a"/>
+    </marker>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#0b7c88"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a8620a"/>
+    </marker>
+    <style>
+      .lbl { font-size: 13px; fill: #333c47; }
+      .lbl-sm { font-size: 11px; fill: #66727f; }
+      .box-title { font-size: 14px; font-weight: 700; fill: #12181f; }
+      .eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; fill: #0b7c88; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .flowlbl { font-size: 11px; fill: #66727f; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="1060" height="748" fill="#f6f7f9"/>
+
+  <!-- header -->
+  <text x="36" y="46" font-size="22" font-weight="700" fill="#12181f" font-family="Iowan Old Style, Palatino, Georgia, serif">API Traffic Management Platform — architecture</text>
+  <text x="36" y="68" class="lbl-sm">Modular monolith · async Python · control plane (portal) + data plane (gateway) · telemetry seam to Project B</text>
+
+  <!-- ================= INBOUND ================= -->
+  <!-- Developers / portal -->
+  <rect x="36" y="104" width="196" height="66" rx="10" fill="#ffffff" stroke="#e1e6ea"/>
+  <text x="50" y="130" class="box-title">Developers</text>
+  <text x="50" y="150" class="lbl-sm">Portal / dashboard · <tspan class="mono">JWT</tspan></text>
+
+  <!-- Consumers -->
+  <rect x="36" y="196" width="196" height="66" rx="10" fill="#ffffff" stroke="#e1e6ea"/>
+  <text x="50" y="222" class="box-title">API consumers</text>
+  <text x="50" y="242" class="lbl-sm">Send traffic · <tspan class="mono">X-API-Key</tspan></text>
+
+  <!-- arrows into app -->
+  <line x1="232" y1="137" x2="286" y2="150" stroke="#5b6b7a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="232" y1="229" x2="286" y2="212" stroke="#0b7c88" stroke-width="1.7" marker-end="url(#arrowTeal)"/>
+
+  <!-- ================= THE APP ================= -->
+  <rect x="288" y="96" width="470" height="374" rx="14" fill="#ffffff" stroke="#cdd6dd"/>
+  <text x="308" y="122" class="eyebrow">FASTAPI APP  ·  STATELESS  ·  N REPLICAS</text>
+
+  <!-- middleware -->
+  <rect x="308" y="132" width="430" height="34" rx="8" fill="#eef1f4" stroke="#e1e6ea"/>
+  <text x="322" y="153" class="lbl">Middleware — <tspan class="mono" font-size="11">request_id / correlation_id</tspan>, structured access log</text>
+
+  <!-- two planes -->
+  <!-- control plane -->
+  <rect x="308" y="176" width="208" height="128" rx="10" fill="#f7f9fa" stroke="#e1e6ea"/>
+  <text x="322" y="197" class="eyebrow" fill="#5b6b7a">CONTROL PLANE</text>
+  <text x="322" y="217" class="lbl">Auth · Orgs · RBAC</text>
+  <text x="322" y="236" class="lbl">API catalog · Keys</text>
+  <text x="322" y="255" class="lbl">Analytics · Dashboards</text>
+  <text x="322" y="274" class="lbl">Audit · Notifications</text>
+  <text x="322" y="293" class="lbl-sm mono">require_permission(perm)</text>
+
+  <!-- data plane / gateway -->
+  <rect x="528" y="176" width="210" height="128" rx="10" fill="#e2f4f5" stroke="#9fd3d8"/>
+  <text x="542" y="197" class="eyebrow">DATA PLANE · GATEWAY</text>
+  <text x="542" y="217" class="lbl mono" font-size="11.5">/gw/{api}/{version}/{path}</text>
+  <text x="542" y="238" class="lbl-sm">1 auth key → 2 resolve upstream</text>
+  <text x="542" y="255" class="lbl-sm">3 rate limit → 4 quota</text>
+  <text x="542" y="272" class="lbl-sm">5 forward → 6 measure</text>
+  <text x="542" y="289" class="lbl-sm">7 log+usage+event → 8 return</text>
+
+  <!-- layers strip -->
+  <rect x="308" y="316" width="430" height="138" rx="10" fill="#f7f9fa" stroke="#e1e6ea"/>
+  <text x="322" y="337" class="eyebrow" fill="#5b6b7a">LAYERS  ·  BUSINESS LOGIC NEVER IN ROUTES</text>
+  <g>
+    <rect x="322" y="348" width="94" height="40" rx="7" fill="#ffffff" stroke="#e1e6ea"/>
+    <text x="369" y="373" text-anchor="middle" class="lbl mono" font-size="11">api</text>
+    <rect x="424" y="348" width="94" height="40" rx="7" fill="#ffffff" stroke="#e1e6ea"/>
+    <text x="471" y="373" text-anchor="middle" class="lbl mono" font-size="11">services</text>
+    <rect x="526" y="348" width="104" height="40" rx="7" fill="#ffffff" stroke="#e1e6ea"/>
+    <text x="578" y="373" text-anchor="middle" class="lbl mono" font-size="11">repositories</text>
+    <rect x="638" y="348" width="86" height="40" rx="7" fill="#ffffff" stroke="#e1e6ea"/>
+    <text x="681" y="373" text-anchor="middle" class="lbl mono" font-size="11">models</text>
+    <line x1="416" y1="368" x2="424" y2="368" stroke="#5b6b7a" stroke-width="1.3" marker-end="url(#arrow)"/>
+    <line x1="518" y1="368" x2="526" y2="368" stroke="#5b6b7a" stroke-width="1.3" marker-end="url(#arrow)"/>
+    <line x1="630" y1="368" x2="638" y2="368" stroke="#5b6b7a" stroke-width="1.3" marker-end="url(#arrow)"/>
+  </g>
+  <text x="322" y="410" class="lbl-sm">core/ — config · security · errors · redis · telemetry emitter &#160;&#160;·&#160;&#160; schemas/ — Pydantic DTOs</text>
+  <text x="322" y="432" class="lbl-sm">Errors → one JSON envelope <tspan class="mono">{code, message, request_id}</tspan> · no stack traces</text>
+
+  <!-- ================= STORES ================= -->
+  <!-- Postgres -->
+  <rect x="308" y="516" width="200" height="150" rx="12" fill="#ffffff" stroke="#cdd6dd"/>
+  <text x="324" y="540" class="eyebrow" fill="#5b6b7a">POSTGRESQL · SOURCE OF TRUTH</text>
+  <text x="324" y="562" class="lbl-sm">users · orgs · members · roles</text>
+  <text x="324" y="580" class="lbl-sm">apis · versions · keys · quotas</text>
+  <text x="324" y="598" class="lbl-sm mono" fill="#0b7c88">request_logs · audit_logs</text>
+  <text x="324" y="616" class="lbl-sm mono" fill="#a8620a">telemetry_outbox</text>
+  <text x="324" y="634" class="lbl-sm">daily_usage (rollup) · api_key_usage</text>
+  <text x="324" y="654" class="lbl-sm">UUID PKs · Alembic migrations</text>
+
+  <!-- Redis -->
+  <rect x="524" y="516" width="214" height="150" rx="12" fill="#ffffff" stroke="#cdd6dd"/>
+  <text x="540" y="540" class="eyebrow">REDIS · FAST STATE</text>
+  <text x="540" y="562" class="lbl">Rate-limit counters</text>
+  <text x="540" y="580" class="lbl-sm">fixed / sliding / token-bucket</text>
+  <text x="540" y="597" class="lbl-sm mono" fill="#0b7c88">atomic Lua (no race)</text>
+  <text x="540" y="618" class="lbl">Quota counters (period buckets)</text>
+  <text x="540" y="636" class="lbl">Auth brute-force throttle</text>
+  <text x="540" y="656" class="lbl-sm">Celery broker + result backend</text>
+
+  <!-- app -> stores -->
+  <line x1="430" y1="470" x2="410" y2="516" stroke="#5b6b7a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="600" y1="470" x2="625" y2="516" stroke="#0b7c88" stroke-width="1.6" marker-end="url(#arrowTeal)"/>
+
+  <!-- ================= UPSTREAMS ================= -->
+  <rect x="812" y="176" width="212" height="128" rx="12" fill="#ffffff" stroke="#cdd6dd"/>
+  <text x="828" y="200" class="eyebrow">UPSTREAM APIs (real)</text>
+  <text x="828" y="222" class="lbl">Per-version <tspan class="mono" font-size="11">upstream_base_url</tspan></text>
+  <text x="828" y="243" class="lbl-sm">demo: httpbin.org / jsonplaceholder</text>
+  <text x="828" y="263" class="lbl-sm">forward via httpx · measure latency</text>
+  <text x="828" y="283" class="lbl-sm">status passthrough · 502 if unreachable</text>
+  <!-- gateway <-> upstream -->
+  <line x1="738" y1="238" x2="812" y2="238" stroke="#0b7c88" stroke-width="1.8" marker-end="url(#arrowTeal)" marker-start="url(#arrowTeal)"/>
+  <text x="748" y="228" class="flowlbl">proxy</text>
+
+  <!-- ================= WORKERS ================= -->
+  <rect x="812" y="336" width="212" height="118" rx="12" fill="#ffffff" stroke="#cdd6dd"/>
+  <text x="828" y="360" class="eyebrow" fill="#a8620a">CELERY WORKER + BEAT</text>
+  <text x="828" y="382" class="lbl">Drain telemetry outbox</text>
+  <text x="828" y="400" class="lbl-sm mono">FOR UPDATE SKIP LOCKED</text>
+  <text x="828" y="420" class="lbl">Daily-usage rollup (idempotent)</text>
+  <text x="828" y="440" class="lbl-sm">every ~10s / 15m · scales out</text>
+
+  <!-- outbox -> worker (routed below the stores, then up the clean corridor between Redis and the right column) -->
+  <path d="M492 666 C 590 690, 720 690, 792 678 L 792 470 C 792 456, 800 450, 812 446" fill="none" stroke="#a8620a" stroke-width="1.8" marker-end="url(#arrowAmber)"/>
+
+  <!-- ================= PROJECT B ================= -->
+  <rect x="812" y="486" width="212" height="180" rx="12" fill="#fbfaf7" stroke="#d9c9ad" stroke-dasharray="6 4"/>
+  <text x="828" y="509" class="eyebrow" fill="#a8620a">PROJECT B (next)</text>
+  <text x="828" y="528" class="box-title" font-size="12.5">Observability &amp; Incident</text>
+  <text x="828" y="545" class="box-title" font-size="12.5">Intelligence</text>
+  <text x="828" y="567" class="lbl-sm">Consumes the telemetry contract:</text>
+  <text x="828" y="585" class="lbl-sm mono" font-size="10.5">request_log, audit_log · v1.0</text>
+  <text x="828" y="603" class="lbl-sm">at-least-once + dedupe on id</text>
+  <text x="828" y="621" class="lbl-sm">pull outbox/tables, or subscribe</text>
+  <text x="828" y="639" class="lbl-sm">to a Kafka / Redis-Streams sink</text>
+  <text x="828" y="658" class="lbl-sm" fill="#a8620a">zero schema change required</text>
+
+  <!-- worker -> project B (sink) -->
+  <line x1="918" y1="454" x2="918" y2="486" stroke="#a8620a" stroke-width="1.8" marker-end="url(#arrowAmber)"/>
+  <text x="928" y="474" class="flowlbl" fill="#a8620a">sink</text>
+
+  <!-- legend -->
+  <g>
+    <rect x="36" y="690" width="742" height="40" rx="8" fill="#ffffff" stroke="#e1e6ea"/>
+    <line x1="52" y1="710" x2="80" y2="710" stroke="#0b7c88" stroke-width="2"/>
+    <text x="88" y="714" class="lbl-sm">data-plane / gateway path</text>
+    <line x1="250" y1="710" x2="278" y2="710" stroke="#5b6b7a" stroke-width="2"/>
+    <text x="286" y="714" class="lbl-sm">control-plane / internal</text>
+    <line x1="450" y1="710" x2="478" y2="710" stroke="#a8620a" stroke-width="2"/>
+    <text x="486" y="714" class="lbl-sm">telemetry (outbox → worker → Project B)</text>
+  </g>
+</svg>

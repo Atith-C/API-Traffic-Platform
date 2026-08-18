@@ -1,0 +1,102 @@
+{
+  "description": "One proxied API request. This is the primary signal Project B ingests.",
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "event_type": {
+      "const": "request_log",
+      "default": "request_log",
+      "title": "Event Type",
+      "type": "string"
+    },
+    "event_id": {
+      "format": "uuid",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "organization_id": {
+      "format": "uuid",
+      "title": "Organization Id",
+      "type": "string"
+    },
+    "api_id": {
+      "format": "uuid",
+      "title": "Api Id",
+      "type": "string"
+    },
+    "api_version_id": {
+      "format": "uuid",
+      "title": "Api Version Id",
+      "type": "string"
+    },
+    "api_key_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Api Key Id"
+    },
+    "method": {
+      "title": "Method",
+      "type": "string"
+    },
+    "path": {
+      "title": "Path",
+      "type": "string"
+    },
+    "status_code": {
+      "title": "Status Code",
+      "type": "integer"
+    },
+    "latency_ms": {
+      "title": "Latency Ms",
+      "type": "number"
+    },
+    "request_bytes": {
+      "title": "Request Bytes",
+      "type": "integer"
+    },
+    "response_bytes": {
+      "title": "Response Bytes",
+      "type": "integer"
+    },
+    "client_ip": {
+      "title": "Client Ip",
+      "type": "string"
+    },
+    "upstream_url": {
+      "title": "Upstream Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "occurred_at",
+    "organization_id",
+    "api_id",
+    "api_version_id",
+    "api_key_id",
+    "method",
+    "path",
+    "status_code",
+    "latency_ms",
+    "request_bytes",
+    "response_bytes",
+    "client_ip",
+    "upstream_url"
+  ],
+  "title": "RequestLogEvent",
+  "type": "object"
+}

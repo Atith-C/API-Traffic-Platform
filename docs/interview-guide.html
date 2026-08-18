@@ -1,0 +1,709 @@
+<style>
+  :root {
+    --paper: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #eef1f4;
+    --ink: #12181f;
+    --text: #333c47;
+    --muted: #66727f;
+    --line: #e1e6ea;
+    --accent: #0d8f9d;
+    --accent-strong: #0b6f7b;
+    --accent-tint: #e2f4f5;
+    --amber: #a8620a;
+    --amber-tint: #f8eede;
+    --good: #0e9f6e;
+    --bad: #d92d20;
+    --code-bg: #0f1720;
+    --code-text: #d6dee6;
+    --code-line: #24313f;
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --maxw: 72ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0c1218;
+      --surface: #121b23;
+      --surface-2: #17222c;
+      --ink: #eef2f6;
+      --text: #b6c1cb;
+      --muted: #7e8b98;
+      --line: #223039;
+      --accent: #2bc0d0;
+      --accent-strong: #57d3e0;
+      --accent-tint: #12303440;
+      --amber: #e0a45a;
+      --amber-tint: #2a221340;
+      --good: #34d399;
+      --bad: #f87171;
+      --code-bg: #0a1017;
+      --code-text: #cdd7e1;
+      --code-line: #1d2833;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0c1218; --surface: #121b23; --surface-2: #17222c; --ink: #eef2f6;
+    --text: #b6c1cb; --muted: #7e8b98; --line: #223039; --accent: #2bc0d0;
+    --accent-strong: #57d3e0; --accent-tint: #12303440; --amber: #e0a45a;
+    --amber-tint: #2a221340; --good: #34d399; --bad: #f87171;
+    --code-bg: #0a1017; --code-text: #cdd7e1; --code-line: #1d2833;
+  }
+  :root[data-theme="light"] {
+    --paper: #f6f7f9; --surface: #ffffff; --surface-2: #eef1f4; --ink: #12181f;
+    --text: #333c47; --muted: #66727f; --line: #e1e6ea; --accent: #0d8f9d;
+    --accent-strong: #0b6f7b; --accent-tint: #e2f4f5; --amber: #a8620a;
+    --amber-tint: #f8eede; --good: #0e9f6e; --bad: #d92d20;
+    --code-bg: #0f1720; --code-text: #d6dee6; --code-line: #24313f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--text);
+    font-family: var(--font-sans); font-size: 17px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; gap: 0; } }
+
+  /* ---- Header ---- */
+  header.masthead {
+    grid-column: 1 / -1; border-bottom: 1px solid var(--line);
+    padding: 40px 0 26px; margin-bottom: 8px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--accent-strong); margin: 0 0 12px;
+  }
+  h1.title {
+    font-family: var(--font-display); font-weight: 600; color: var(--ink);
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.08; margin: 0 0 14px;
+    text-wrap: balance; letter-spacing: -0.01em;
+  }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 12px; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+
+  /* ---- Nav ---- */
+  nav.toc {
+    align-self: start; position: sticky; top: 0; padding: 28px 0;
+    max-height: 100vh; overflow-y: auto;
+  }
+  @media (max-width: 900px) { nav.toc { position: static; max-height: none; padding: 8px 0 20px; border-bottom: 1px solid var(--line); } }
+  nav.toc .toc-title {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 14px;
+  }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: nav; }
+  nav.toc li { margin: 0; }
+  nav.toc a {
+    display: flex; gap: 10px; padding: 5px 0; color: var(--text);
+    text-decoration: none; font-size: 14px; line-height: 1.35; border-radius: 4px;
+  }
+  nav.toc a:hover { color: var(--accent-strong); }
+  nav.toc a .n {
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+    min-width: 20px; font-variant-numeric: tabular-nums;
+  }
+
+  main { padding: 20px 0 120px; min-width: 0; }
+  section { scroll-margin-top: 20px; padding: 30px 0; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: none; }
+  .sec-num {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em;
+    color: var(--accent-strong); text-transform: uppercase;
+  }
+  h2 {
+    font-family: var(--font-display); font-weight: 600; color: var(--ink);
+    font-size: clamp(24px, 3.4vw, 32px); line-height: 1.15; margin: 6px 0 18px;
+    text-wrap: balance; letter-spacing: -0.01em;
+  }
+  h3 {
+    font-family: var(--font-sans); font-weight: 700; color: var(--ink);
+    font-size: 19px; margin: 30px 0 10px; letter-spacing: -0.005em;
+  }
+  h4 { font-size: 15px; color: var(--ink); margin: 20px 0 6px; font-weight: 700; }
+  p { max-width: var(--maxw); }
+  main a { color: var(--accent-strong); text-decoration: underline; text-underline-offset: 2px; }
+  strong { color: var(--ink); font-weight: 650; }
+  ul, ol { max-width: var(--maxw); padding-left: 22px; }
+  li { margin: 5px 0; }
+  code {
+    font-family: var(--font-mono); font-size: 0.86em;
+    background: var(--surface-2); color: var(--ink); padding: 1.5px 6px;
+    border-radius: 5px; border: 1px solid var(--line); white-space: nowrap;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-text); border: 1px solid var(--code-line);
+    border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 16px 0;
+    font-family: var(--font-mono); font-size: 13.5px; line-height: 1.6; max-width: 100%;
+  }
+  pre code { background: none; border: none; padding: 0; color: inherit; white-space: pre; font-size: inherit; }
+  .cmt { color: #7c8ba0; }
+  .kw { color: #7fd3e0; }
+  .str { color: #9ede9a; }
+
+  /* ---- Callouts ---- */
+  .callout {
+    border: 1px solid var(--line); border-left-width: 3px; border-radius: 10px;
+    padding: 15px 18px; margin: 18px 0; background: var(--surface); max-width: var(--maxw);
+  }
+  .callout .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
+    text-transform: uppercase; margin: 0 0 7px; font-weight: 600; display: flex; gap: 8px; align-items: center;
+  }
+  .callout p { margin: 6px 0; max-width: none; }
+  .callout p:last-child { margin-bottom: 0; }
+  .qa { border-left-color: var(--accent); background: var(--accent-tint); }
+  .qa .label { color: var(--accent-strong); }
+  .why { border-left-color: var(--muted); }
+  .why .label { color: var(--muted); }
+  .gotcha { border-left-color: var(--amber); background: var(--amber-tint); }
+  .gotcha .label { color: var(--amber); }
+  .qa .q { font-weight: 650; color: var(--ink); }
+
+  /* ---- Diagram ---- */
+  .diagram {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px; margin: 20px 0; overflow-x: auto; max-width: 100%;
+  }
+  .flow { font-family: var(--font-mono); font-size: 13px; line-height: 1.9; color: var(--text); white-space: pre; margin: 0; }
+  .flow b { color: var(--accent-strong); }
+
+  /* ---- Table ---- */
+  .table-scroll { overflow-x: auto; margin: 18px 0; max-width: 100%; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  td code { white-space: normal; }
+
+  .pill { font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+  .pill.good { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+  .pill.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+
+  hr.soft { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
+  .foot { grid-column: 1 / -1; border-top: 1px solid var(--line); padding: 24px 0 60px; color: var(--muted); font-size: 14px; }
+
+  .theme-toggle {
+    position: fixed; top: 14px; right: 14px; z-index: 20;
+    font-family: var(--font-mono); font-size: 12px; color: var(--text);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 12px; cursor: pointer;
+  }
+  .theme-toggle:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) { a, .theme-toggle { transition: color .15s ease; } }
+</style>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light or dark theme">◐ theme</button>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">Project A · Engineering field guide</p>
+    <h1 class="title">API Traffic Management Platform — how it works, and how to defend it</h1>
+    <p class="lede">A read-once-before-the-interview walkthrough of the architecture, the reasoning behind each decision, and the questions an SDE‑1/2 panel will actually ask — with answers you can say out loud.</p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span> <b>90</b> tests · <b>85%</b> cov</span>
+      <span class="chip">FastAPI · SQLAlchemy 2 async</span>
+      <span class="chip">Postgres · Redis · Celery</span>
+      <span class="chip">Docker · Testcontainers</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <p class="toc-title">Contents</p>
+    <ol>
+      <li><a href="#pitch"><span class="n">00</span> The 60-second pitch</a></li>
+      <li><a href="#arch"><span class="n">01</span> Architecture at a glance</a></li>
+      <li><a href="#layers"><span class="n">02</span> The layers &amp; DI</a></li>
+      <li><a href="#data"><span class="n">03</span> Data model</a></li>
+      <li><a href="#auth"><span class="n">04</span> Auth &amp; tokens</a></li>
+      <li><a href="#rbac"><span class="n">05</span> RBAC &amp; multi-tenancy</a></li>
+      <li><a href="#keys"><span class="n">06</span> API keys</a></li>
+      <li><a href="#gateway"><span class="n">07</span> The gateway</a></li>
+      <li><a href="#ratelimit"><span class="n">08</span> Rate limiting</a></li>
+      <li><a href="#quota"><span class="n">09</span> Quotas</a></li>
+      <li><a href="#telemetry"><span class="n">10</span> Telemetry &amp; the outbox</a></li>
+      <li><a href="#analytics"><span class="n">11</span> Analytics</a></li>
+      <li><a href="#crosscut"><span class="n">12</span> Cross-cutting concerns</a></li>
+      <li><a href="#testing"><span class="n">13</span> Testing strategy</a></li>
+      <li><a href="#deploy"><span class="n">14</span> Deployment &amp; ops</a></li>
+      <li><a href="#scale"><span class="n">15</span> Scaling &amp; trade-offs</a></li>
+      <li><a href="#warstories"><span class="n">16</span> War stories (real bugs)</a></li>
+      <li><a href="#rapid"><span class="n">17</span> Rapid-fire Q&amp;A</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="pitch">
+      <p class="sec-num">00 · Orientation</p>
+      <h2>The 60-second pitch</h2>
+      <p>It's a lightweight <strong>API gateway + developer portal</strong>, in the spirit of Kong / Tyk / Apigee. Organizations register their APIs, mint API keys, and route real traffic through a gateway that <strong>authenticates the key, enforces rate limits and quotas, forwards the request to the configured upstream, measures it, logs it, and emits telemetry</strong>. On top of that sits multi-tenant auth + RBAC, analytics dashboards, and audit logging.</p>
+      <p>The one design constraint that shaped everything: its request/audit telemetry is emitted through a <strong>versioned, decoupled event contract</strong> so a second product (an observability platform) can consume it later with zero schema changes.</p>
+      <div class="callout why">
+        <p class="label">▸ Say this first in an interview</p>
+        <p>"It's a modular monolith in async Python. The interesting parts aren't CRUD — they're the <em>gateway data-plane</em> (rate limiting with Redis Lua, quota enforcement, upstream proxying) and the <em>transactional outbox</em> that guarantees telemetry is never lost. Everything else is clean layering around those two."</p>
+      </div>
+    </section>
+
+    <section id="arch">
+      <p class="sec-num">01 · Structure</p>
+      <h2>Architecture at a glance</h2>
+      <p>It's a <strong>modular monolith</strong>: one deployable process, but with hard internal boundaries between layers. You get the operational simplicity of a monolith (one deploy, one DB transaction spanning a request, easy local dev) with the internal decoupling that lets you split a module into its own service later if you ever need to.</p>
+
+      <div class="diagram"><pre class="flow">HTTP request
+   │
+   ▼
+<b>api/</b>  (FastAPI routers — thin: parse → call one service → serialize)
+   │
+   ▼
+<b>services/</b>  (business logic, orchestration, authorization decisions)
+   │
+   ▼
+<b>repositories/</b>  (the ONLY layer that touches the ORM / DB session)
+   │
+   ▼
+<b>models/</b>  (SQLAlchemy 2 ORM — UUID PKs, timestamps)
+
+   side rails used by every layer:
+   <b>schemas/</b> Pydantic DTOs   <b>core/</b> config · security · errors · redis · telemetry</pre></div>
+
+      <h3>Why async?</h3>
+      <p>The platform is <strong>I/O-bound</strong>: nearly every request makes a DB round-trip plus a Redis round-trip, and the gateway path additionally makes an outbound HTTP call to an upstream. Async (FastAPI + SQLAlchemy&nbsp;2 async + asyncpg + httpx) lets one worker handle many concurrent in-flight requests without a thread per request — exactly the concurrency profile a gateway needs. CPU work (password hashing) is the rare exception and is deliberately bounded.</p>
+
+      <h3>The request lifecycle</h3>
+      <ol>
+        <li><strong>Request-context middleware</strong> assigns a <code>request_id</code> + <code>correlation_id</code>, binds them into the logging context (so every log line in that request is traceable), and logs a structured access line with latency on the way out.</li>
+        <li>Routing → a router handler resolves its dependencies (session, current user, permission check) via FastAPI's DI.</li>
+        <li>Handler calls <strong>one service method</strong>; the service uses repositories; the DB session commits at the end of the request (or rolls back on error).</li>
+        <li>Any raised <code>AppError</code> is caught by a central handler and rendered as a consistent JSON error envelope; the <code>X-Request-ID</code> is echoed on every response.</li>
+      </ol>
+
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why a monolith and not microservices?"</p>
+        <p>Because the domain is small and highly cohesive, and a single process means a request's DB writes are one ACID transaction — which is what makes the transactional outbox trivial. Microservices would add network hops, distributed transactions, and ops overhead for no benefit at this size. The layering keeps the option open: services depend on repository interfaces, not on each other's internals, so a module could be extracted later.</p>
+      </div>
+    </section>
+
+    <section id="layers">
+      <p class="sec-num">02 · The golden rule</p>
+      <h2>The layers &amp; dependency injection</h2>
+      <p>The single rule that keeps the codebase honest: <strong>business logic never lives in a route handler, and the ORM is never touched outside a repository.</strong></p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Layer</th><th>Responsibility</th><th>Hard rule</th></tr></thead>
+        <tbody>
+          <tr><td><code>api/</code></td><td>Validate the request, call one service, serialize the result.</td><td>No business logic. No DB access.</td></tr>
+          <tr><td><code>services/</code></td><td>Business logic, orchestration, authorization decisions.</td><td>Framework-agnostic — <strong>no FastAPI imports</strong>. Gets deps by constructor.</td></tr>
+          <tr><td><code>repositories/</code></td><td>Data access for one aggregate; enforce tenant scoping.</td><td>Only place that imports the session/ORM.</td></tr>
+          <tr><td><code>schemas/</code></td><td>Pydantic request/response DTOs.</td><td>Never expose an ORM object directly.</td></tr>
+          <tr><td><code>core/</code></td><td>Config, security, errors, logging, redis, telemetry emitter.</td><td>No feature logic.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Wiring happens <strong>at the edge</strong>. FastAPI's <code>Depends()</code> assembles a service from repositories + a session; inside the service everything is plain constructor injection. That's why services are unit-testable with fake repositories and know nothing about HTTP.</p>
+      <pre><code><span class="cmt"># api/deps.py — the composition root</span>
+<span class="kw">def</span> get_auth_service(session: SessionDep, sender: EmailSenderDep) -> AuthService:
+    <span class="kw">return</span> AuthService(
+        users=UserRepository(session),
+        refresh_tokens=RefreshTokenRepository(session),
+        email_sender=sender,
+    )</code></pre>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"How do you keep business logic testable?"</p>
+        <p>Services take their dependencies through the constructor and depend on repository classes, not on FastAPI. In a unit test I can pass an in-memory fake; in an integration test I pass a real repository backed by a Testcontainers Postgres. The service code is identical either way.</p>
+      </div>
+    </section>
+
+    <section id="data">
+      <p class="sec-num">03 · The schema</p>
+      <h2>Data model</h2>
+      <p>Every table has a <strong>UUID primary key</strong> and <code>created_at</code>/<code>updated_at</code> timestamps (a shared mixin). A stable constraint-naming convention makes Alembic diffs deterministic. The entity groups:</p>
+      <ul>
+        <li><strong>Identity:</strong> <code>users</code>, <code>refresh_tokens</code></li>
+        <li><strong>Tenancy &amp; RBAC:</strong> <code>organizations</code>, <code>organization_members</code>, <code>roles</code>, <code>permissions</code>, <code>role_permissions</code></li>
+        <li><strong>API catalog:</strong> <code>apis</code>, <code>api_versions</code> (each holds an <code>upstream_base_url</code>), <code>quotas</code>, <code>rate_limit_rules</code>, <code>api_keys</code></li>
+        <li><strong>Telemetry &amp; analytics:</strong> <code>request_logs</code>, <code>api_key_usage</code>, <code>audit_logs</code>, <code>telemetry_outbox</code>, <code>daily_usage</code></li>
+        <li><strong>Misc:</strong> <code>notifications</code></li>
+      </ul>
+      <div class="callout why">
+        <p class="label">▸ Why UUIDs, not auto-increment ints</p>
+        <p>Two reasons that matter for this product: IDs are exposed in URLs/API responses, and sequential ints leak volume and are guessable (enumeration). UUIDs are non-enumerable and can be generated client-side / across shards without coordination. The trade-off — slightly larger index, non-sequential inserts — is negligible here.</p>
+      </div>
+      <p>Telemetry tables are deliberately <strong>decoupled from the transactional catalog tables</strong> (they reference IDs but avoid FKs into hot tables), carry composite <code>(scope, created_at)</code> indexes for time-range queries, and are designed to be partitioned later. That decoupling is what lets the observability product ingest them without touching the write path.</p>
+    </section>
+
+    <section id="auth">
+      <p class="sec-num">04 · Security</p>
+      <h2>Auth &amp; tokens</h2>
+      <h3>Password hashing</h3>
+      <p><strong>Argon2id</strong> (via <code>argon2-cffi</code>) — memory-hard, the current OWASP recommendation, resistant to GPU cracking. On login, if the stored hash used outdated parameters we transparently re-hash (parameter upgrade). On a missing user we still run a hash to blunt timing side-channels.</p>
+
+      <h3>Access vs refresh tokens</h3>
+      <div class="table-scroll"><table>
+        <thead><tr><th></th><th>Access token</th><th>Refresh token</th></tr></thead>
+        <tbody>
+          <tr><td>Form</td><td>Signed <strong>JWT</strong> (HS256)</td><td>Opaque random string (<code>token_urlsafe(48)</code>)</td></tr>
+          <tr><td>Lifetime</td><td>Short (~15 min)</td><td>Long (~14 days)</td></tr>
+          <tr><td>Stored server-side?</td><td>No — stateless, verified by signature</td><td>Yes — only its <strong>SHA-256 hash</strong></td></tr>
+          <tr><td>Sent as</td><td><code>Authorization: Bearer</code></td><td>httpOnly cookie + body</td></tr>
+        </tbody>
+      </table></div>
+      <p>Access tokens are stateless so the common path (every API call) needs no DB lookup — just a signature check. Refresh tokens are opaque and stored hashed so a database leak can't be replayed, and so we can <em>revoke</em> them (you can't revoke a stateless JWT).</p>
+
+      <h3>Refresh rotation with reuse detection — the crown jewel</h3>
+      <p>Every refresh token belongs to a <strong>family</strong> (a <code>family_id</code>). Using a refresh token <em>rotates</em> it: the old one is revoked and a successor is issued in the same family. The security property comes from what happens on misuse:</p>
+      <div class="diagram"><pre class="flow">normal:   R1 ──rotate──▶ R2 ──rotate──▶ R3        (each old token revoked)
+
+stolen:   attacker replays R1 (already revoked)
+          └─▶ <b>reuse detected</b> → revoke the ENTIRE family
+              → R2, R3 die too → real user is forced to re-login</pre></div>
+      <p>If a <em>revoked</em> token is ever presented again, that's proof of theft (either the attacker or the victim is replaying an old token). We can't tell which, so we revoke the whole family and force re-authentication. This is the standard OWASP refresh-token-rotation mitigation.</p>
+
+      <h3>Email verification &amp; password reset</h3>
+      <p>Both use short-lived <strong>signed action tokens</strong> (JWTs with a <code>purpose</code> claim). A reset token is bound to a fingerprint of the current password hash, so it's effectively <strong>single-use</strong> — once the password changes, the fingerprint no longer matches and the link is dead. Email delivery sits behind an <code>EmailSender</code> interface (console impl now; swap for SES/SendGrid later).</p>
+
+      <h3>Brute-force throttle</h3>
+      <p>Login and reset endpoints run through a fixed-window Redis counter keyed by <code>IP + email</code>; over the limit returns <code>429</code> with <code>Retry-After</code>. It's deliberately separate from the gateway's configurable rate limiter — auth throttling is a fixed security policy, not a per-customer product feature.</p>
+
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why not just use long-lived JWTs and skip the refresh dance?"</p>
+        <p>Because you can't revoke a stateless JWT before it expires. If a long-lived token leaks, the attacker has access until expiry. Short access tokens shrink that window to minutes; the refresh token — stored hashed and revocable, with rotation + reuse detection — gives you both good UX (you're not re-logging-in every 15 min) and the ability to cut off a stolen session immediately.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why store the refresh token hashed instead of encrypted?"</p>
+        <p>We never need to read it back — we only need to <em>recognize</em> it when presented. A one-way hash is the right primitive for that: a DB leak yields hashes an attacker can't reverse into usable tokens. Encryption would imply a key we'd have to protect and rotate, for no functional gain.</p>
+      </div>
+    </section>
+
+    <section id="rbac">
+      <p class="sec-num">05 · Authorization</p>
+      <h2>RBAC &amp; multi-tenancy</h2>
+      <p>A user belongs to many organizations; in each they hold exactly one <strong>role</strong> (owner / admin / developer / viewer). Roles map to <strong>permissions</strong> like <code>api:create</code>, <code>key:revoke</code>, <code>member:invite</code>, <code>analytics:read</code>.</p>
+      <h3>Single source of truth</h3>
+      <p>The permission catalog and the role→permission mapping live in <strong>one Python module</strong> (<code>core/permissions.py</code>). It's seeded into the DB (<code>roles</code>/<code>permissions</code>/<code>role_permissions</code>) idempotently on startup for auditability — but authorization <em>checks</em> use the in-memory mapping for speed. A test asserts the two never drift.</p>
+      <h3>How a check happens</h3>
+      <p><code>require_permission(perm)</code> is a dependency factory. It reads the <code>{org_id}</code> from the URL path, looks up the caller's membership in that org, and verifies their role grants the permission — returning the membership object for the handler to use.</p>
+      <pre><code><span class="cmt"># The route declares intent; the dependency enforces it.</span>
+<span class="kw">@router</span>.delete(<span class="str">"/organizations/{org_id}/apis/{api_id}"</span>)
+<span class="kw">async def</span> delete_api(api_id, service, _=Depends(require_permission(Permission.API_DELETE))):
+    ...</code></pre>
+      <p><strong>Tenant scoping is enforced in the repository, not just the route.</strong> Every catalog query filters by <code>organization_id</code>, and mutating operations re-verify the resource belongs to the org in the path. So even with a valid ID from another tenant, you get a 404 — cross-tenant access is structurally impossible, not just checked at the door.</p>
+      <h3>Invariants live in the service</h3>
+      <p>Example: you can't demote or remove the <strong>last owner</strong> of an org. That rule is enforced in <code>OrganizationService</code>, so it holds no matter which route calls it.</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Where do you enforce that tenant A can't read tenant B's data?"</p>
+        <p>Two layers. The <code>require_permission</code> dependency checks the caller is a member of the org in the path. But the real guarantee is in the repository: queries are scoped by <code>organization_id</code>, so a resource ID that belongs to another org simply isn't found. Defense in depth — a route bug can't leak data because the data layer won't return it.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why keep the permission mapping in code if it's also in the DB?"</p>
+        <p>Checks need to be fast and can't afford a join per request, so the hot path reads an in-memory frozenset. The DB copy exists for auditability and so an admin UI could show/edit it later. A startup seed reconciles the DB to the code, and a unit test asserts they match — so there's exactly one source of truth with a fast cache in front of it.</p>
+      </div>
+    </section>
+
+    <section id="keys">
+      <p class="sec-num">06 · Credentials</p>
+      <h2>API keys</h2>
+      <p>Keys authenticate <em>consumers</em> at the gateway (distinct from user JWTs, which authenticate <em>humans</em> in the portal). Format: <code>atp_&lt;public-id&gt;_&lt;secret&gt;</code>.</p>
+      <ul>
+        <li><strong>Shown once.</strong> On creation we return the full key exactly once; we persist only its <strong>SHA-256 hash</strong> (unique-indexed for O(1) lookup), plus a public prefix and last-four for display.</li>
+        <li><strong>Revoke</strong> is immediate (sets <code>revoked_at</code>).</li>
+        <li><strong>Rotate</strong> issues a successor and <strong>grace-windows</strong> the old key (it keeps working for N hours, then expires) — so clients can roll over without downtime. Grace 0 = revoke immediately.</li>
+      </ul>
+      <div class="callout why">
+        <p class="label">▸ Why a fast hash (SHA-256) for keys but Argon2 for passwords?</p>
+        <p>Different threat models. A password is low-entropy and human-chosen, so it needs a <em>slow</em> hash to resist brute force. An API key is high-entropy random (256 bits) — brute-forcing it is infeasible regardless — so we want a <em>fast</em> deterministic hash we can look up on every single gateway request without adding latency.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"A customer says they lost their key. What can you show them?"</p>
+        <p>Only the prefix and last four characters — we never stored the secret, just its hash. They rotate to get a new one. That "we literally cannot recover it" property is the point: a DB compromise yields no usable keys.</p>
+      </div>
+    </section>
+
+    <section id="gateway">
+      <p class="sec-num">07 · The data plane</p>
+      <h2>The gateway — the heart of the product</h2>
+      <p>This is the part that makes it a gateway and not a CRUD app. One catch-all route, <code>/gw/{api}/{version}/{path}</code>, accepts any method and runs the full pipeline:</p>
+      <div class="diagram"><pre class="flow">1. <b>Authenticate</b>   hash the presented API key → look up → valid? not revoked/expired? API active?
+2. <b>Resolve</b>        the key's API must match {api}; find active {version} → its upstream_base_url
+3. <b>Rate limit</b>     per (api, key) via the configured strategy (Redis)   → 429 if exceeded
+4. <b>Quota</b>          per key per period (daily/monthly, Redis)             → 429 if exceeded
+5. <b>Forward</b>        httpx call to upstream: method, filtered headers, query, body
+6. <b>Measure</b>        wall-clock latency, request/response byte sizes, status
+7. <b>Record</b>         request_log + api_key_usage + telemetry event (one DB transaction)
+8. <b>Return</b>         upstream's response verbatim (status, safe headers, body) + X-Gateway-Latency-Ms</pre></div>
+      <h3>Details that matter</h3>
+      <ul>
+        <li><strong>Header hygiene:</strong> hop-by-hop headers (RFC 7230) and the platform's own auth headers (<code>Authorization</code>, <code>X-API-Key</code>) are stripped before forwarding — we terminate auth here, the upstream never sees the consumer's key.</li>
+        <li><strong>Status passthrough:</strong> a real upstream 503 is returned as 503 — we don't mask the upstream's own status. Only when we <em>can't reach</em> the upstream (timeout, connection error) do we synthesize a <code>502</code>.</li>
+        <li><strong>Framework-agnostic core:</strong> the route hands the service plain primitives (method, path, headers, body), not a FastAPI <code>Request</code> — so the gateway logic is unit-testable and reusable.</li>
+        <li><strong>Real upstreams:</strong> the upstream URL is per-version config, not a bundled fake. Demos point at <code>httpbin.org</code>; tests mock the outbound httpx client with <code>respx</code> so CI makes no network calls.</li>
+      </ul>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Walk me through what happens to one proxied request."</p>
+        <p>Use the 8-step list above out loud. The two things to emphasize: rate-limit/quota happen <em>before</em> the upstream call (so we don't waste an upstream request on a call we'll reject), and the log + usage + telemetry writes happen in the <em>same</em> DB transaction as each other so they're atomic.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"If a quota check passes but the upstream call then fails, what happens to the counter?"</p>
+        <p>We roll back the consumed quota units for a request we never actually served upstream — the quota enforcer has a <code>rollback</code> that decrements the Redis counter. So a dead upstream doesn't silently burn a customer's quota.</p>
+      </div>
+    </section>
+
+    <section id="ratelimit">
+      <p class="sec-num">08 · The interesting algorithm</p>
+      <h2>Rate limiting</h2>
+      <p>Three pluggable strategies (Strategy pattern), each backed by an <strong>atomic Redis Lua script</strong>. A rule is attached per API; the limit is keyed per <code>(api, api_key)</code> so one noisy consumer can't starve the others.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Strategy</th><th>Mechanism</th><th>Trade-off</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Fixed window</strong></td><td><code>INCR</code> a per-window counter with a TTL.</td><td>Cheapest; but allows a 2× burst across a window boundary.</td></tr>
+          <tr><td><strong>Sliding window (log)</strong></td><td>A sorted set of request timestamps; drop old, count, add.</td><td>Accurate to the second; more memory per key.</td></tr>
+          <tr><td><strong>Token bucket</strong></td><td>Tokens refill at a steady rate up to a burst capacity.</td><td>Smooth rate <em>and</em> a controlled burst; the most flexible.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout why">
+        <p class="label">▸ Why Lua? — the single most important point here</p>
+        <p>Rate limiting is a <strong>read-modify-write</strong>: read the counter, decide, update it. If two requests do that concurrently, they can both read "9 of 10" and both proceed — a race that lets you exceed the limit. Redis runs a Lua script <strong>atomically</strong> (single-threaded, no interleaving), so the check-and-increment is one indivisible operation. That's the whole reason the logic is in Lua and not in Python.</p>
+      </div>
+      <p>Each script returns <code>{allowed, remaining, retry_after_ms}</code>; on rejection the gateway raises a <code>429</code> carrying <code>Retry-After</code>, and successful responses get <code>X-RateLimit-Limit</code> / <code>-Remaining</code> headers.</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Fixed vs sliding window — when does it matter?"</p>
+        <p>Fixed window resets the counter on a hard boundary, so a client can send the full limit at 0:59 and again at 1:00 — a 2× burst in two seconds. Sliding window looks at a rolling trailing window, so that burst is caught. Fixed is fine when approximate limiting is acceptable and you want minimal cost; sliding when the limit is a hard SLA. Token bucket is the middle ground: steady average with a bounded burst.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why key the limit per API key instead of per API?"</p>
+        <p>Fairness. A per-API global limit means one heavy consumer can consume the whole budget and starve everyone else on that API. Per-key isolates tenants from each other. (A per-API ceiling could be layered on top if you also wanted to protect the upstream itself.)</p>
+      </div>
+    </section>
+
+    <section id="quota">
+      <p class="sec-num">09 · Longer-horizon limits</p>
+      <h2>Quotas</h2>
+      <p>Where rate limits protect against bursts (per second/minute), <strong>quotas</strong> cap total volume over a calendar period — daily or monthly. They're enforced with Redis counters keyed by <code>{api_key}:{period}:{bucket}</code>, where the bucket is the current day (<code>2026-08-10</code>) or month, with a TTL set to the end of that period so the key expires naturally.</p>
+      <p>Enforcement is a single atomic <code>INCR</code>; if it pushes over the cap we <code>rollback</code> (decrement) and reject with a <code>quota_exceeded</code> 429. The authoritative history still lives in <code>request_logs</code> / <code>api_key_usage</code> — Redis is the fast enforcement layer, Postgres is the source of truth.</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Rate limit and quota both return 429 — why two mechanisms?"</p>
+        <p>Different time horizons and intents. Rate limiting smooths short-term load to protect the upstream and ensure fairness (requests/second). Quota enforces a commercial/plan limit over a billing period (requests/month). You want both: a customer can be under their monthly quota but still hammering you this second.</p>
+      </div>
+    </section>
+
+    <section id="telemetry">
+      <p class="sec-num">10 · The distributed-systems set-piece</p>
+      <h2>Telemetry &amp; the transactional outbox</h2>
+      <p>This is the part that signals "I understand distributed systems." The problem: when the gateway serves a request, it must both <strong>write the request log to Postgres</strong> and <strong>publish a telemetry event</strong> for the downstream observability product. If you do those as two independent operations, you have the classic <strong>dual-write problem</strong>:</p>
+      <div class="diagram"><pre class="flow">Naïve dual write:
+   write DB  ✓ ───→ publish event  ✗ (broker down)   ⇒ event <b>lost</b>
+   publish event ✓ ───→ write DB  ✗ (crash)          ⇒ event <b>phantom</b> (never happened)</pre></div>
+      <h3>The fix: transactional outbox</h3>
+      <p>Instead of publishing directly, the request handler writes the event into an <code>telemetry_outbox</code> table <strong>in the very same DB transaction</strong> as the business write. Since it's one ACID commit, the event and the log are saved together or not at all — <strong>never lost, never phantom</strong>. A separate background worker then drains the outbox and delivers events to the real transport.</p>
+      <div class="diagram"><pre class="flow">   ┌─ same transaction ─────────────┐
+   │  INSERT request_log            │
+   │  INSERT api_key_usage          │  ← all commit atomically
+   │  INSERT telemetry_outbox (row) │
+   └────────────────────────────────┘
+                 │
+                 ▼  (async, every ~10s — Celery beat)
+        <b>publisher drains</b> pending rows  ──→  sink  ──→  Project B
+        FOR UPDATE SKIP LOCKED · stamps published_at</pre></div>
+      <h3>Why <code>FOR UPDATE SKIP LOCKED</code></h3>
+      <p>So you can run <em>multiple</em> publisher workers safely. Each grabs a batch of pending rows and locks them; <code>SKIP LOCKED</code> means a second worker just skips the locked rows and takes different ones — no double-delivery, no contention. Rows are stamped <code>published_at</code> after delivery (kept, not deleted, so history survives).</p>
+      <h3>Transport-agnostic by design (and no Kafka)</h3>
+      <p>Delivery goes through a <code>TelemetrySink</code> interface. Today the sink logs structured events. Swapping in Kafka or Redis Streams later is a new sink class — <strong>zero change to the event schema, the outbox, or any business code</strong>. That's a deliberate call: Project A doesn't need a message broker's operational weight, so it doesn't have one, but nothing about the design blocks adding one.</p>
+      <h3>The versioned contract</h3>
+      <p>Events (<code>request_log</code>, <code>audit_log</code>) are Pydantic models carrying a <code>schema_version</code>. JSON Schemas are generated from them into <code>telemetry/schemas/</code>. The rule: additive optional fields don't bump the version; a breaking change does, and consumers must tolerate unknown fields. This is the contract the observability product consumes.</p>
+      <p><strong>Audit logs</strong> use the same machinery: security-sensitive actions (key create/revoke/rotate) write an <code>audit_logs</code> row plus an outbox event, atomically.</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"How do you guarantee a telemetry event is never lost?"</p>
+        <p>Transactional outbox. The event row is written in the same DB transaction as the business change, so they commit together atomically — there's no window where one exists without the other. A background publisher delivers from the outbox and marks rows published; if delivery fails, the row stays pending and is retried. Delivery is therefore <em>at-least-once</em>, and consumers dedupe on the event's UUID.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Is delivery exactly-once?"</p>
+        <p>Exactly-once at the <em>source</em> (the outbox write is atomic with the business write). End-to-end delivery is <em>at-least-once</em> — a publisher could deliver a batch then crash before stamping <code>published_at</code>, re-delivering on restart. That's why every event carries a stable <code>event_id</code> for the consumer to dedupe. Trying to make it truly exactly-once end-to-end is famously not worth it; at-least-once + idempotent consumers is the standard.</p>
+      </div>
+    </section>
+
+    <section id="analytics">
+      <p class="sec-num">11 · Read models</p>
+      <h2>Analytics</h2>
+      <p>Two-tier, because "raw" and "aggregated" queries have different shapes:</p>
+      <ul>
+        <li><strong>Live queries</strong> (summary, top endpoints, status breakdown) read <code>request_logs</code> directly, fast via the <code>(api_id, created_at)</code> index. p95 latency uses Postgres <code>percentile_cont(0.95) WITHIN GROUP</code>.</li>
+        <li><strong>Time series</strong> reads a pre-aggregated <code>daily_usage</code> rollup, so a 90-day chart never scans the raw log table.</li>
+      </ul>
+      <p>The rollup is rebuilt by a Celery job and is <strong>idempotent</strong>: it <code>DELETE</code>s the target day then re-<code>INSERT</code>s from the raw logs. Running it twice yields the same result — which matters because the "today" bucket is recomputed every 15 minutes as new traffic arrives.</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why pre-aggregate instead of just querying the logs?"</p>
+        <p>Scan cost. A dashboard showing 90 days of daily totals over a table with millions of rows would be slow and would hammer the same table the write path uses. The daily rollup turns that into a tiny indexed read. It's the read-model / CQRS idea: optimize the write table for writes, and maintain a separate shape optimized for the read.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Why does the rollup delete-then-insert instead of upsert-increment?"</p>
+        <p>Idempotency. Incrementing means running the job twice double-counts. Delete-then-recompute-from-source means the job is a pure function of the raw data — safe to re-run, safe to backfill, safe to run on a partial (still-open) day.</p>
+      </div>
+    </section>
+
+    <section id="crosscut">
+      <p class="sec-num">12 · The plumbing</p>
+      <h2>Cross-cutting concerns</h2>
+      <h4>Configuration — 12-factor</h4>
+      <p>All config comes from the environment via a typed, validated <code>pydantic-settings</code> object, loaded once and injected. No module reads <code>os.environ</code> directly. Secrets never ship in code; there are <code>.env.example</code> and <code>production.env.example</code> templates.</p>
+      <h4>Error handling — one envelope</h4>
+      <p>Domain code raises typed <code>AppError</code> subclasses (<code>NotFoundError</code>, <code>PermissionDeniedError</code>, <code>RateLimitedError</code>…). Central handlers render every error as <code>{"error": {code, message, details, request_id}}</code>. <strong>Stack traces are never exposed</strong> (OWASP); an unexpected exception becomes a generic 500 with the detail logged server-side.</p>
+      <h4>Logging — structured &amp; correlated</h4>
+      <p><code>structlog</code> emits JSON in prod. Every log line in a request carries its <code>request_id</code>/<code>correlation_id</code> (bound via contextvars in middleware), and the correlation id honors an inbound header so a trace can span services — the first hook the observability product uses.</p>
+      <h4>Migrations — Alembic, async, verified</h4>
+      <p>Schema changes are Alembic migrations autogenerated against a real Postgres, and <strong>every migration is verified with an <code>upgrade → downgrade → upgrade</code> roundtrip</strong> before it lands. The env runs async against the same engine as the app (one source of truth for the DB URL).</p>
+      <h4>Observability hooks</h4>
+      <p><code>/health/live</code> + <code>/health/ready</code> (checks DB + Redis) for probes, a Prometheus <code>/metrics</code> endpoint, and OpenTelemetry API/SDK wired as no-op hooks ready for a real exporter.</p>
+    </section>
+
+    <section id="testing">
+      <p class="sec-num">13 · Confidence</p>
+      <h2>Testing strategy</h2>
+      <p><strong>90 tests, 85% coverage</strong>, run every milestone (not deferred to the end). The pyramid:</p>
+      <ul>
+        <li><strong>Unit</strong> — pure logic (security primitives, permission catalog, config parsing) with no external deps. Fast, no Docker.</li>
+        <li><strong>Integration / API</strong> — the app driven by an httpx <code>AsyncClient</code> against <strong>real Postgres + Redis via Testcontainers</strong>. Real DB, real Redis, real SQL — not mocks.</li>
+      </ul>
+      <p>The gateway's <strong>outbound</strong> upstream call is the one thing mocked (with <code>respx</code>), so tests are deterministic and CI never touches the network — while the <em>real</em> upstream integration stays available for manual demos.</p>
+      <div class="callout why">
+        <p class="label">▸ Why Testcontainers instead of SQLite or mocks?</p>
+        <p>Because the code uses Postgres-specific features — <code>percentile_cont</code>, <code>ON CONFLICT</code> upserts, JSONB, <code>FOR UPDATE SKIP LOCKED</code>. SQLite would pass tests that break in prod. Testcontainers spins up the <em>real</em> Postgres 16 in a throwaway container, so the tests exercise exactly what production runs.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"How do you test rate limiting or the outbox without flaky timing?"</p>
+        <p>Rate limiting runs against a real Redis (Testcontainers) and asserts the Nth request flips to 429 — deterministic because the Lua script is deterministic. The outbox test drives a real gateway call, asserts a pending row exists, runs the drain function, and asserts it's marked published. No sleeps, no wall-clock races.</p>
+      </div>
+    </section>
+
+    <section id="deploy">
+      <p class="sec-num">14 · Shipping</p>
+      <h2>Deployment &amp; ops</h2>
+      <ul>
+        <li><strong>Multi-stage Dockerfile</strong>: deps built into a venv in a builder stage, copied into a slim runtime image that runs as a <strong>non-root user</strong> with a <code>HEALTHCHECK</code>.</li>
+        <li><strong>docker-compose</strong> brings up the whole stack: Postgres, Redis, the API (runs <code>alembic upgrade</code> then serves), a Celery worker, a Celery beat scheduler, and the nginx-served frontend.</li>
+        <li><strong>CI (GitHub Actions)</strong>: ruff (lint + format), mypy, the full pytest suite (the runner's Docker daemon backs Testcontainers), frontend type-check + build, and a Docker image build.</li>
+        <li>The <strong>frontend</strong> is a minimal React + TS + Vite + Tailwind + React Query dashboard, served by nginx which proxies <code>/api</code> to the backend.</li>
+      </ul>
+      <p>Verified end-to-end live: <code>compose up</code> → healthy → a real request proxied to <code>httpbin.org</code> → the worker drained the telemetry outbox → the dashboard rendered the live numbers.</p>
+    </section>
+
+    <section id="scale">
+      <p class="sec-num">15 · The senior questions</p>
+      <h2>Scaling &amp; trade-offs</h2>
+      <p>Interviewers push on "what breaks at 100×?". Honest answers:</p>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"How does this scale horizontally?"</p>
+        <p>The API is stateless (access tokens are stateless; all shared state is in Postgres/Redis), so you run N replicas behind a load balancer. Rate limiting and quotas are already in Redis, so they're correct across replicas. The outbox publisher scales out too — <code>SKIP LOCKED</code> lets multiple workers drain concurrently. The bottleneck becomes Postgres.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"<code>request_logs</code> will get huge. What then?"</p>
+        <p>It's already decoupled and indexed on <code>(scope, created_at)</code> for exactly this. Next steps: <strong>partition by time</strong> (monthly partitions, drop old ones cheaply), move raw logs to a column store (ClickHouse/Timescale) for analytics, and rely on the <code>daily_usage</code> rollup so dashboards never touch raw rows. The write path already goes through the outbox, so shipping logs to a separate store is a sink change, not a rewrite.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"What are the current limitations you'd fix first?"</p>
+        <p>Be honest — it reads as senior: (1) rejected gateway requests (429/401) aren't persisted as request_logs, only access-logged; (2) quota counters live only in Redis, so a flush resets in-flight windows; (3) the outbox publisher polls every 10s — fine now, but I'd move to a push/stream for lower latency at scale; (4) rate limiting is per-key only — I'd add an optional per-API ceiling to protect upstreams.</p>
+      </div>
+      <div class="callout qa">
+        <p class="label">◆ Interview Q</p>
+        <p class="q">"Single Redis is a SPOF for the gateway. Thoughts?"</p>
+        <p>Correct. In production I'd run Redis in a replicated/clustered mode. There's also a design choice about failure mode: if Redis is down, do you <em>fail open</em> (allow traffic, lose limiting) or <em>fail closed</em> (reject)? For a rate limiter, fail-open is usually right — you'd rather serve traffic than take an outage — with alerting so it's not silent.</p>
+      </div>
+    </section>
+
+    <section id="warstories">
+      <p class="sec-num">16 · "Tell me about a hard bug"</p>
+      <h2>War stories — real bugs from the build</h2>
+      <p>These are gold when asked about debugging. Each is a real issue that came up and how it was diagnosed.</p>
+      <div class="callout gotcha">
+        <p class="label">⚠ asyncpg "attached to a different loop"</p>
+        <p>Integration tests failed intermittently in the DB health check. Cause: a <em>session-scoped</em> async engine — asyncpg connection pools are bound to the event loop that created them, but pytest-asyncio gives each test its own loop. Fix: make the engine <em>function-scoped</em> (one per test, bound to that test's loop); keep the expensive containers session-scoped. Lesson: async resources are loop-affine.</p>
+      </div>
+      <div class="callout gotcha">
+        <p class="label">⚠ MissingGreenlet during RBAC seeding</p>
+        <p>Reassigning a lazy-loaded relationship (<code>role.permissions = [...]</code>) triggered a synchronous lazy-load inside an async context → <code>MissingGreenlet</code>. Fix: await-load the collection first via SQLAlchemy's <code>awaitable_attrs</code> (which required adding the <code>AsyncAttrs</code> mixin to the base). Lesson: in async SQLAlchemy, implicit lazy I/O is a trap — load explicitly.</p>
+      </div>
+      <div class="callout gotcha">
+        <p class="label">⚠ Empty schema in tests</p>
+        <p><code>create_all()</code> silently created nothing on some runs. Cause: the models package wasn't imported before <code>Base.metadata</code> was read, so the metadata was empty — it only "worked" by collection-order luck. Fix: an explicit <code>import app.models</code> in conftest. Lesson: ORM table registration is an import side effect; make it deterministic.</p>
+      </div>
+      <div class="callout gotcha">
+        <p class="label">⚠ Postgres <code>round(double, int)</code> doesn't exist</p>
+        <p>An analytics query threw a ProgrammingError — Postgres has <code>round(numeric, int)</code> but not <code>round(double precision, int)</code>. Also hit a subtle one: labeling a column <code>count</code> collided with Python's tuple <code>.count</code> method on the result row. Fixes: round in Python, and never label a column with a tuple method name. Lesson: the DB's type system and the driver's row API both have sharp edges.</p>
+      </div>
+      <div class="callout gotcha">
+        <p class="label">⚠ Deployment: three container gotchas</p>
+        <p>(1) The Docker build failed because <code>pyproject.toml</code> referenced a README outside the build context → dropped the reference. (2) Celery <strong>beat</strong> crashed with "permission denied" writing its schedule file — the container runs non-root and <code>/app</code> isn't writable → pointed <code>--schedule</code> at <code>/tmp</code>. (3) The frontend nginx returned 502 after I rebuilt only the API container — nginx had cached the old container's IP → restart re-resolves. Lesson: non-root containers and DNS caching bite in the last mile.</p>
+      </div>
+      <div class="callout gotcha">
+        <p class="label">⚠ List env var wouldn't parse in Docker</p>
+        <p><code>CORS_ORIGINS=http://localhost:5173</code> crashed startup — pydantic-settings tries to JSON-decode list-typed fields from env before a validator runs. Fix: annotate the field with <code>NoDecode</code> and split the string myself. Lesson: settings libraries have opinions about complex types from env strings.</p>
+      </div>
+    </section>
+
+    <section id="rapid">
+      <p class="sec-num">17 · Flashcards</p>
+      <h2>Rapid-fire Q&amp;A</h2>
+      <p>Short answers to memorize.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Question</th><th>One-liner answer</th></tr></thead>
+        <tbody>
+          <tr><td>Why FastAPI?</td><td>Async, Pydantic validation built-in, auto OpenAPI docs, dependency injection.</td></tr>
+          <tr><td>Why SQLAlchemy 2 async + asyncpg?</td><td>Non-blocking DB I/O to match the async web layer; asyncpg is the fast native driver.</td></tr>
+          <tr><td>Argon2 vs bcrypt?</td><td>Argon2id is memory-hard (GPU-resistant) and the current OWASP pick.</td></tr>
+          <tr><td>Where's the atomicity in rate limiting?</td><td>A Redis Lua script — single-threaded, so check-and-increment can't race.</td></tr>
+          <tr><td>Dual-write problem &amp; fix?</td><td>DB write + publish can diverge; transactional outbox writes the event in the same txn.</td></tr>
+          <tr><td>At-least-once vs exactly-once?</td><td>Outbox gives at-least-once delivery; consumers dedupe on event_id.</td></tr>
+          <tr><td>Multi-tenant isolation?</td><td>Repositories scope every query by organization_id; wrong-tenant IDs 404.</td></tr>
+          <tr><td>CQRS here?</td><td>Yes, lightly — raw request_logs for writes, daily_usage rollup for read dashboards.</td></tr>
+          <tr><td>Idempotent job?</td><td>Daily rollup = delete-then-recompute, a pure function of the raw data.</td></tr>
+          <tr><td>SKIP LOCKED?</td><td>Lets multiple outbox workers drain concurrently without double-delivery.</td></tr>
+          <tr><td>Fail-open or fail-closed rate limiter?</td><td>Fail-open (serve traffic) with alerting, for a limiter.</td></tr>
+          <tr><td>How is a stolen refresh token contained?</td><td>Reuse of a revoked token → revoke the whole token family → force re-login.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Companion to <code>docs/HANDOFF.md</code>, <code>docs/architecture.md</code>, and <code>docs/telemetry-contract.md</code> in the project. Read this once before an interview; skim the rapid-fire table on the way in.</p>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var btn = document.getElementById("themeToggle");
+    var root = document.documentElement;
+    btn.addEventListener("click", function () {
+      var current = root.getAttribute("data-theme");
+      if (!current) {
+        current = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      root.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    });
+  })();
+</script>

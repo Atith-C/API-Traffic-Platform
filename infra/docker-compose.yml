@@ -1,0 +1,89 @@
+# Local development / demo stack: API + Celery worker + Celery beat + Postgres + Redis.
+# Usage (from repo root):  docker compose -f infra/docker-compose.yml up --build
+name: api-traffic-platform
+
+x-backend-build: &backend-build
+  build:
+    context: ../backend
+    dockerfile: Dockerfile
+
+x-backend-env: &backend-env
+  APP_ENV: development
+  LOG_JSON: "true"
+  DATABASE_URL: postgresql+asyncpg://apitraffic:apitraffic@db:5432/apitraffic
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: dev-secret-change-me
+  CORS_ORIGINS: http://localhost:5173
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: apitraffic
+      POSTGRES_PASSWORD: apitraffic
+      POSTGRES_DB: apitraffic
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U apitraffic"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    <<: *backend-build
+    environment:
+      <<: *backend-env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    # Run migrations, then serve.
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  worker:
+    <<: *backend-build
+    environment:
+      <<: *backend-env
+    depends_on:
+      - api
+      - redis
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=INFO
+
+  beat:
+    <<: *backend-build
+    environment:
+      <<: *backend-env
+    depends_on:
+      - redis
+    # Non-root container: keep the schedule file in a writable location.
+    command: celery -A app.workers.celery_app.celery_app beat --loglevel=INFO --schedule=/tmp/celerybeat-schedule
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "5173:80"
+
+volumes:
+  pgdata:
