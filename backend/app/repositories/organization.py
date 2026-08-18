@@ -67,9 +67,7 @@ class MembershipRepository(BaseRepository[OrganizationMember]):
         )
         return list(result.scalars().all())
 
-    async def list_org_roles_for_user(
-        self, user_id: uuid.UUID
-    ) -> list[tuple[uuid.UUID, str]]:
+    async def list_org_roles_for_user(self, user_id: uuid.UUID) -> list[tuple[uuid.UUID, str]]:
         """(organization_id, role_name) for every org the user belongs to.
 
         Used to embed an ``orgs`` claim in the access token so downstream products (Project B) can

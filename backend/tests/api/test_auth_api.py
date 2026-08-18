@@ -19,7 +19,8 @@ async def test_access_token_carries_orgs_claim(client: AsyncClient) -> None:
     ).json()["access_token"]
     org_id = (
         await client.post(
-            "/organizations", json={"name": "Claim Co"},
+            "/organizations",
+            json={"name": "Claim Co"},
             headers={"Authorization": f"Bearer {token1}"},
         )
     ).json()["id"]
